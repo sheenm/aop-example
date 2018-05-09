@@ -20,7 +20,7 @@ namespace AopExample.Repository
         public IEnumerable<T> GetAll()
         {
             Console.WriteLine("Getting entities");
-            return null;
+            return new List<T>();
         }
         public T GetById(int id)
         {

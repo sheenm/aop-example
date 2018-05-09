@@ -1,42 +1,38 @@
 using System;
 using System.Reflection;
+using AopExample.Proxies.Actions;
 
 namespace AopExample.Proxies
 {
     public class DynamicProxy<T> : DispatchProxy
     {
         private T _decorated;
+        private IProxyActions _actions;
+
         public DynamicProxy() : base()
         {
         }
 
-        private void Log(string msg, object arg = null)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(msg, arg);
-            Console.ResetColor();
-        }
-
-        public static T Create(T decorated)
+        public static T Create(T decorated, IProxyActions actions)
         {
             object proxy = DispatchProxy.Create<T, DynamicProxy<T>>();
             ((DynamicProxy<T>)proxy)._decorated = decorated;
+            ((DynamicProxy<T>)proxy)._actions = actions;
             return (T)proxy;
         }
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-
-            Log("In Dynamic Proxy - Before executing '{0}'", targetMethod.Name);
+            _actions.OnActionExecution(targetMethod, args);
             try
             {
                 var result = targetMethod.Invoke(_decorated, args);
-                Log("In Dynamic Proxy - After executing '{0}' ", targetMethod.Name);
+                _actions.OnActionExecuted(targetMethod, args);
                 return result;
             }
             catch (Exception e)
             {
-                Log(string.Format("In Dynamic Proxy- Exception {0} executing '{1}'", e), targetMethod.Name);
+                _actions.OnError(targetMethod, args, e);
                 throw;
             }
         }

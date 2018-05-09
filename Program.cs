@@ -8,7 +8,6 @@ namespace AopExample
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("***\r\n Begin program - no logging\r\n");
             var customerRepository = RepositoryFactory<Customer>.Create();
             var customer = new Customer
             {
@@ -19,8 +18,6 @@ namespace AopExample
             customerRepository.Add(customer);
             customerRepository.Update(customer);
             customerRepository.Delete(customer);
-            Console.WriteLine("\r\nEnd program - no logging\r\n***");
-            Console.ReadLine();
         }
     }
 }
