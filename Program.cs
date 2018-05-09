@@ -9,7 +9,7 @@ namespace AopExample
         static void Main(string[] args)
         {
             Console.WriteLine("***\r\n Begin program - no logging\r\n");
-            IRepository<Customer> customerRepository = new LoggerRepository<Customer>(new Repository<Customer>());
+            var customerRepository = RepositoryFactory<Customer>.Create();
             var customer = new Customer
             {
                 Id = 1,
